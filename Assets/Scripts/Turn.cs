@@ -2,12 +2,10 @@ using UnityEngine;
 
 public class Turn : MonoBehaviour
 {
-    [SerializeField] private int CurrentTurn;
-    DoubleLinkedList<Entity> ListEntitys;
+    [SerializeField] private int currentTurn;
+    DoubleLinkedList<Entity> ListEntitys = new DoubleLinkedList<Entity>();
 
-
-    void SetTurn()
-    {
-
-    }
+    public int CurrentTurn {set; get;}
+    public DoubleLinkedList<Entity> ListEntities { set; get;}
+    
 }

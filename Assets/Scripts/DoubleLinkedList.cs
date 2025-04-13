@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
-public class DoubleLinkedList<T> : MonoBehaviour
+public class DoubleLinkedList<T> 
 {
     public Node<T> head = null;
     public Node<T> last = null;
@@ -34,16 +35,16 @@ public class DoubleLinkedList<T> : MonoBehaviour
     {
         if (head == null || deep >= count)
         {
-            print("No hay elementos en la lista o No se encontro elemento");
-            return null;
+            throw new NullReferenceException ("No hay elementos en la lista o No se encontro elemento");
+            
         }
-        if (_head == null)
+        if (_head == null)  
             _head = head;
 
         if (_head.Value.Equals(objective))
         {
-            print("Elemento encontrado: " + _head.Value.ToString());
-            print("Se encontro en la posicion: " + deep);
+            //print("Elemento encontrado: " + _head.Value.ToString());
+            //print("Se encontro en la posicion: " + deep);
             return _head;
         }
         else
@@ -54,16 +55,16 @@ public class DoubleLinkedList<T> : MonoBehaviour
     {
         if (head == null || deep >= count)
         {
-            print("No hay elementos en la lista o No se encontro elemento");
-            return null;
+            throw new NullReferenceException("No hay elementos en la lista o No se encontro elemento");
+            
         }
         if (_head == null)
             _head = head;
 
         if (_pos == deep && _pos <= count)
         {
-            print("Elemento encontrado: " + _head.Value.ToString());
-            print("Se encontro en la posicion: " + deep);
+            //print("Elemento encontrado: " + _head.Value.ToString());
+            //print("Se encontro en la posicion: " + deep);
             return _head;
         }
         else
@@ -88,10 +89,10 @@ public class DoubleLinkedList<T> : MonoBehaviour
     public Node<T> SeekNext(int _pos)
     {
 
-        return Seek(_pos).Next;
+        return Seek(_pos).Next;      
     }
 
-    public virtual void ReadFromStart(Node<T> _head = null, int deep = 0)
+    /*public virtual void ReadFromStart(Node<T> _head = null, int deep = 0)
     {
         if (head == null || deep >= count) return;
 
@@ -117,15 +118,15 @@ public class DoubleLinkedList<T> : MonoBehaviour
 
         ReadFromEnd(_last.Prev, deep + 1);
     }
-
+    */
     public virtual void Remove(T objective)
     {
         Node<T> node = Seek(objective);
 
         if (node == null)
         {
-            print("No existe elemento");
-            return;
+            throw new NullReferenceException ("No existe elemento");
+            
         }
         #region NodoEsElPrimero
         if (node == head && count >= 1)//El Nodo es el primero de la lista

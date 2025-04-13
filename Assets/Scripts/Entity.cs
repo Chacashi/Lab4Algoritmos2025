@@ -4,5 +4,10 @@ using UnityEngine;
 public class Entity : MonoBehaviour
 {
     [SerializeField] private string entityName;
-    int position;
+     private Vector2 position;
+
+
+    public string EntityName { set; get; }
+    public Vector2 Position {  set; get; }
+
 }
