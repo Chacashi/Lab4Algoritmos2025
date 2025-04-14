@@ -33,64 +33,65 @@ public class DoubleLinkedList<T>
 
     public Node<T> Seek(T objective, Node<T> _head = null, int deep = 0)
     {
-        if (head == null || deep >= count)
+        if (_head == null)
         {
-            throw new NullReferenceException ("No hay elementos en la lista o No se encontro elemento");
-            
-        }
-        if (_head == null)  
             _head = head;
+            if (_head == null)
+            {
+                throw new NullReferenceException("La lista está vacía.");
+            }
+        }
+
+        if (_head.Value == null)
+        {
+            throw new NullReferenceException("Nodo sin valor.");
+        }
 
         if (_head.Value.Equals(objective))
         {
-            //print("Elemento encontrado: " + _head.Value.ToString());
-            //print("Se encontro en la posicion: " + deep);
             return _head;
         }
-        else
-            return Seek(objective, _head.Next, deep + 1);
 
-    }
-    public Node<T> Seek(int _pos, Node<T> _head = null, int deep = 0)
-    {
-        if (head == null || deep >= count)
+        if (_head.Next == null)
         {
-            throw new NullReferenceException("No hay elementos en la lista o No se encontro elemento");
-            
+            throw new NullReferenceException("Elemento no encontrado en la lista.");
         }
+
+        return Seek(objective, _head.Next, deep + 1);
+    }
+    public Node<T> Seek(int index, Node<T> _head = null, int deep = 0)
+    {
+        if (index < 0 || index >= count)
+        {
+            throw new ArgumentOutOfRangeException("Índice fuera del rango de la lista.");
+        }
+
         if (_head == null)
-            _head = head;
-
-        if (_pos == deep && _pos <= count)
         {
-            //print("Elemento encontrado: " + _head.Value.ToString());
-            //print("Se encontro en la posicion: " + deep);
+            _head = head;
+            if (_head == null)
+            {
+                throw new NullReferenceException("La lista está vacía.");
+            }
+        }
+
+        if (deep == index)
+        {
             return _head;
         }
-        else
-            return Seek(_pos, _head.Next, deep + 1);
 
-    }
-    public Node<T> SeekPrev(T objective)
-    {
+        if (_head.Next == null)
+        {
+            throw new NullReferenceException("No se pudo avanzar al siguiente nodo. Posiblemente la lista esté corrupta.");
+        }
 
-        return Seek(objective).Prev;
+        return Seek(index, _head.Next, deep + 1);
     }
-    public Node<T> SeekPrev(int _pos)
-    {
+    public Node<T> SeekPrev(T objective) => Seek(objective).Prev;
+    public Node<T> SeekPrev(int _pos) => Seek(_pos).Prev;
+    public Node<T> SeekNext(T objective) => Seek(objective).Next;
+    public Node<T> SeekNext(int _pos) => Seek(_pos).Next;
 
-        return Seek(_pos).Prev;
-    }
-    public Node<T> SeekNext(T objective)
-    {
-
-        return Seek(objective).Next;
-    }
-    public Node<T> SeekNext(int _pos)
-    {
-
-        return Seek(_pos).Next;      
-    }
 
     /*public virtual void ReadFromStart(Node<T> _head = null, int deep = 0)
     {
@@ -119,45 +120,43 @@ public class DoubleLinkedList<T>
         ReadFromEnd(_last.Prev, deep + 1);
     }
     */
-    public virtual void Remove(T objective)
+    public virtual void RemoveNode(Node<T> node)
     {
-        Node<T> node = Seek(objective);
-
         if (node == null)
         {
-            throw new NullReferenceException ("No existe elemento");
-            
-        }
-        #region NodoEsElPrimero
-        if (node == head && count >= 1)//El Nodo es el primero de la lista
-        {
-            head = node.Next;
-            count--;
+            Debug.LogWarning("Intentando eliminar un nodo nulo.");
             return;
         }
-        else if (node == head && count == 1)//El Nodo es el primero y el unico de la lista
+
+        // Nodo único
+        if (node == head && node == last)
         {
             RemoveAll();
             return;
         }
-        #endregion
-        #region NodoEnElMedio
-        if (SeekPrev(objective) != null && node.Next != null)//El nodo esta en el medio y apunta a siguientes
+
+        // Nodo al principio
+        if (node == head)
         {
-            SeekPrev(objective).SetNext(node.Next);
+            head = node.Next;
+            if (head != null) head.SetPrev(null);
             count--;
             return;
         }
-        #endregion
-        #region NodoEsElUltimo
-        if (SeekPrev(objective) != null && node.Next == null)//El nodo es el ultimo de la lista
+
+        // Nodo al final
+        if (node == last)
         {
-            SeekPrev(objective).SetNext(null);
-            last = SeekPrev(objective);
+            last = node.Prev;
+            if (last != null) last.SetNext(null);
             count--;
             return;
         }
-        #endregion
+
+        // Nodo en el medio
+        node.Prev?.SetNext(node.Next);
+        node.Next?.SetPrev(node.Prev);
+        count--;
     }
 
     public virtual void RemoveAll()

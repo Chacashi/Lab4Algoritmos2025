@@ -1,13 +1,23 @@
-using JetBrains.Annotations;
+
 using UnityEngine;
 
-public class Entity : MonoBehaviour
+public class Entity 
 {
-    [SerializeField] private string entityName;
-     private Vector2 position;
+     private string entityName;
+    private int life;
+    private Vector2 position;
+
+    public Vector2 Position { set {  position = value; } get { return position; } }
+    public string EntityName { set { entityName = value; } get { return entityName; } }
+    public int Life { set { life = value; } get { return life; } }
 
 
-    public string EntityName { set; get; }
-    public Vector2 Position {  set; get; }
+    public Entity()
+    {
+        position = Vector2.zero;
+        entityName ="";
+        life = 100;
+    }
+    
 
 }
